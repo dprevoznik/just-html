@@ -1,3 +1,4 @@
+import { ORIGIN } from "@/lib/auth/config";
 import { bookmarkExists, findBySlug } from "@/lib/docs/store";
 import { canViewSession, canView } from "@/lib/docs/access";
 import { canEdit } from "@/lib/docs/grants";
@@ -14,7 +15,7 @@ import {
 } from "@/lib/docs/comments";
 import { detectServerTheme } from "@/lib/docs/theme";
 import { extractSections } from "@/lib/docs/sections";
-import { documentPreview } from "@/lib/docs/preview";
+import { documentPreview, extractPreviewVideo } from "@/lib/docs/preview";
 import CommentsShell from "./CommentsShell";
 
 export const dynamic = "force-dynamic";
@@ -75,6 +76,8 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
     ? [{ url: imageUrl, width: 1200, height: 630, alt: preview.title }]
     : undefined;
 
+  const video = imageUrl ? extractPreviewVideo(doc.html) : null;
+
   return {
     title: `${preview.title} — justhtml.sh`,
     description: preview.description,
@@ -86,6 +89,7 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
       description: preview.description,
       url: pageUrl,
       images,
+      videos: video ? [video] : undefined,
     },
     twitter: {
       card: imageUrl ? "summary_large_image" : "summary",
@@ -111,7 +115,7 @@ async function reconstructRequest(): Promise<Request> {
     const value = h.get(name);
     if (value) hdrs.set(name, value);
   }
-  return new Request("https://justhtml.sh/d", { headers: hdrs });
+  return new Request(`${ORIGIN}/d`, { headers: hdrs });
 }
 
 export default async function ViewerPage({ params, searchParams }: Props) {

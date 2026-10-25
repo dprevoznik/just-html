@@ -1,6 +1,7 @@
 import { Resend } from "resend";
 import {
   RESEND_FROM,
+  ORIGIN,
   LOGIN_SUBJECT,
   CLAIM_SUBJECT,
   LOGIN_TOKEN_TTL_MIN,
@@ -186,7 +187,7 @@ function shareHtmlBody(opts: {
 }): string {
   const rows = `<tr><td style="${LEAD}">${esc(opts.ownerEmail)} shared <strong>"${esc(opts.title)}"</strong> with you.</td></tr>
 ${gap(16)}<tr><td style="${LEAD}"><a href="${esc(opts.link)}" style="${LINK}">Open the document &rarr;</a></td></tr>
-${gap(16)}<tr><td style="${CAVEAT}">Signs you in on this device, no account needed. Good for ${SHARE_EXPIRY_DAYS} days. If it expires, <a href="${esc(opts.docUrl)}" style="color:#666666;">open the document</a> and choose "was this shared with you? sign in". To edit via API, have your agent register at justhtml.sh/auth.md with this email.</td></tr>`;
+${gap(16)}<tr><td style="${CAVEAT}">Signs you in on this device, no account needed. Good for ${SHARE_EXPIRY_DAYS} days. If it expires, <a href="${esc(opts.docUrl)}" style="color:#666666;">open the document</a> and choose "was this shared with you? sign in". To edit via API, have your agent register at ${ORIGIN}/auth.md with this email.</td></tr>`;
   return shell("shared with you on justhtml.sh", rows);
 }
 
@@ -205,7 +206,7 @@ Signs you in on this device, no account needed. Good for ${SHARE_EXPIRY_DAYS} da
 expires, open the document directly and choose "was this shared with you? sign in":
   ${opts.docUrl}
 
-To edit via API, have your agent register at justhtml.sh/auth.md with this email.`;
+To edit via API, have your agent register at ${ORIGIN}/auth.md with this email.`;
 }
 
 /**
@@ -356,7 +357,7 @@ function commentTextBody(opts: CommentEmailParts): string {
     lines.push(
       `This sign-in link is good for ${COMMENT_EXPIRY_DAYS} days.`,
       whyLine(true),
-      "If it expires, sign in at justhtml.sh and open the document:",
+      `If it expires, sign in at ${ORIGIN} and open the document:`,
       `  ${opts.docUrl}`
     );
   } else {

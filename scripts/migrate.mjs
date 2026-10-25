@@ -43,9 +43,9 @@ function listMigrations() {
 // Strip the libpq-only ssl params and drive TLS explicitly against Node's CA
 // store. Mirrors lib/pg-config.ts (kept inline so this script has no TS dep).
 function pgConfig() {
-  const raw = process.env.PLANETSCALE_URL;
+  const raw = process.env.DATABASE_URL || process.env.PLANETSCALE_URL;
   if (!raw) {
-    console.error("PLANETSCALE_URL is not set");
+    console.error("DATABASE_URL (or PLANETSCALE_URL) is not set");
     process.exit(1);
   }
   const url = new URL(raw);

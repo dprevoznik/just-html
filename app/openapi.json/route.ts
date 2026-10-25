@@ -1,8 +1,9 @@
+import { instanceContent } from "@/lib/instance";
 import spec from "@/lib/openapi/generated.json";
 
 export const dynamic = "force-static";
 
-const BODY = JSON.stringify(spec);
+const BODY = instanceContent(JSON.stringify(spec));
 
 export function GET(): Response {
   return new Response(BODY, {

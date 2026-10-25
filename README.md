@@ -18,6 +18,11 @@ An agent can already write the HTML. What it can't easily do is *give it a home*
 
 justhtml.sh fills that gap and makes the whole loop agent-native. Onboarding uses the open [auth.md](https://workos.com/auth-md) protocol, so an agent discovers how to register, gets a long-lived key, and publishes — the only human step is reading a 6-digit code back from your email. Sharing, comments, and reactions use the same endpoints for humans and agents.
 
+## Self-hosting this fork
+
+See [SELF_HOSTING.md](SELF_HOSTING.md) for Vercel setup and per-document
+`og:video` previews.
+
 ## Install
 
 Install the skill so your agent already knows how to use justhtml.sh:

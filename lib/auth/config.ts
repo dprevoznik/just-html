@@ -15,9 +15,15 @@ export const SESSION_TTL_S = 2_592_000; // session lifetime, 30 days
 export const SESSION_SLIDE_FLOOR_S = 3_600; // throttle sliding-expiry writes to 1/h
 export const API_KEY_LAST_USED_THROTTLE_S = 60; // last_used_at bump throttle
 
-export const ORIGIN = "https://justhtml.sh";
-export const ISSUER = "https://justhtml.sh";
-export const RESOURCE = "https://justhtml.sh/api/v1/";
+// Explicit canonical origin wins; Vercel supplies the production alias for forks.
+export const ORIGIN = new URL(
+  process.env.APP_ORIGIN ||
+    (process.env.VERCEL_PROJECT_PRODUCTION_URL
+      ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+      : "https://justhtml.sh")
+).origin;
+export const ISSUER = ORIGIN;
+export const RESOURCE = `${ORIGIN}/api/v1/`;
 export const SCOPES = ["docs.read", "docs.write"] as const;
 // Derived from SCOPES so there is no second place to edit. SCOPE_STRING is the
 // space-delimited OAuth scope value; SCOPE_PG_ARRAY is the Postgres array literal
@@ -41,7 +47,7 @@ export const SESSION_COOKIE = "jh_sess";
 // single-use token by running the auto-submit script before the human taps.
 export const LOGIN_INTENT_COOKIE = "jh_login_intent";
 
-export const RESEND_FROM = "justhtml.sh <login@notify.justhtml.sh>";
+export const RESEND_FROM = process.env.RESEND_FROM || "justhtml.sh <login@notify.justhtml.sh>";
 export const LOGIN_SUBJECT = "justhtml.sh login";
 // The claim email carries the 6-digit code and nothing else actionable (no
 // links, no buttons) — the human reads it back to the agent (one flow).

@@ -32,7 +32,7 @@ const doc = {
   slug: "quiet-moon-12345",
   owner_id: 1,
   title: "Private plan",
-  html: `<meta name="description" content="Private preview copy">`,
+  html: `<meta name="description" content="Private preview copy"><meta property="og:video" content="https://cdn.example/demo.mp4"><meta property="og:video:type" content="video/mp4">`,
   version: 1,
   is_public: false,
   view_token: "secret-token",
@@ -84,6 +84,7 @@ describe("document metadata", () => {
         height: 630,
       }),
     ]);
+    expect(metadata.openGraph?.videos).toEqual([expect.objectContaining({url: "https://cdn.example/demo.mp4", type: "video/mp4"})]);
     expect(metadata.twitter).toMatchObject({ card: "summary_large_image", title: "Private plan" });
   });
 
@@ -93,6 +94,7 @@ describe("document metadata", () => {
     const metadata = await generateMetadata(props());
 
     expect(metadata.openGraph?.images).toBeUndefined();
+    expect(metadata.openGraph?.videos).toBeUndefined();
     expect(metadata.twitter).toMatchObject({ card: "summary", images: undefined });
   });
 
@@ -102,6 +104,7 @@ describe("document metadata", () => {
     const metadata = await generateMetadata(props());
 
     expect(metadata.robots).toBeUndefined();
+    expect(metadata.openGraph?.videos).toEqual([expect.objectContaining({url: "https://cdn.example/demo.mp4"})]);
     expect(metadata.openGraph?.images).toEqual([
       expect.objectContaining({ url: `https://justhtml.sh/d/${doc.slug}/preview` }),
     ]);

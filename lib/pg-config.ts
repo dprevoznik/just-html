@@ -7,9 +7,9 @@ import type { PoolConfig } from "pg";
 // drive TLS via an explicit `ssl` object that verifies against Node's bundled
 // CA store (rejectUnauthorized: true => full verification).
 export function pgConfigFromEnv(): PoolConfig {
-  const raw = process.env.PLANETSCALE_URL;
+  const raw = process.env.DATABASE_URL || process.env.PLANETSCALE_URL;
   if (!raw) {
-    throw new Error("PLANETSCALE_URL is not set");
+    throw new Error("DATABASE_URL (or PLANETSCALE_URL) is not set");
   }
   const url = new URL(raw);
   const sslmode = url.searchParams.get("sslmode");

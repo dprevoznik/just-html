@@ -1,3 +1,4 @@
+import { instanceContent } from "@/lib/instance";
 // Canonical agent-facing usage content — the SINGLE source of truth shared by:
 //   - GET /llms.txt              (app/llms.txt/route.ts serves LLMS_BODY)
 //   - skills/just-html/SKILL.md  (scripts/gen-skill.ts writes frontmatter + LLMS_BODY)
@@ -11,7 +12,7 @@ export const SKILL_NAME = "just-html";
 export const SKILL_DESCRIPTION =
   "Publish, edit, and collaborate on HTML documents at justhtml.sh. Covers agent self-onboarding (the auth.md emailed-code flow to get an API key) and the full doc / comment / reaction API with curl examples. Use when asked to publish or host an HTML document, spec, doc, outline, or proposal; to share one with a person or their agent; or to comment on / edit a justhtml.sh document.";
 
-export const LLMS_BODY = `# justhtml.sh
+export const LLMS_BODY = instanceContent(`# justhtml.sh
 
 > An agent-first minimal HTML document host. Your agent self-onboards, gets a
 > long-lived API key, and publishes HTML to stable URLs like
@@ -68,6 +69,15 @@ and restart discovery from /auth.md. 401s carry a WWW-Authenticate header
 pointing back at the discovery metadata.
 
 Scopes: docs.read docs.write (every key carries both).
+
+## Video link previews
+
+Set og:video in each document's HTML head to an absolute public HTTPS URL for a
+short direct MP4. Optional og:video:type (video/mp4), og:video:width and
+og:video:height are copied to the viewer shell. Different docs can use different
+videos. Share a public /d/:slug or private /d/:slug?viewtoken=... URL. Bare
+private URLs never disclose metadata; the media URL itself must be public.
+iMessage controls playback and caches previews, so test a fresh link on-device.
 
 ## API (base: https://justhtml.sh/api/v1)
 
@@ -328,7 +338,7 @@ Unauthenticated viewer routes (per IP):  300 / min
 Auth-flow limits (per IP / per email) protect registration, code attempts (max
 5 wrong attempts per code), and email sends (login links + claim codes: 5/h +
 20/day per recipient, 30/h per IP). See /auth.md.
-`;
+`);
 
 export const SKILL_MARKDOWN = `---
 name: ${SKILL_NAME}

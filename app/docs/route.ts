@@ -1,3 +1,4 @@
+import { instanceContent } from "@/lib/instance";
 import { manPage, htmlResponse, esc, redirect } from "@/lib/page";
 import { getSession } from "@/lib/auth/session";
 import { listDocs, listSharedDocs, type DocListRow, type SharedDocRow } from "@/lib/docs/store";
@@ -45,7 +46,7 @@ const VARIANT_C_STYLE = `
 // scoped CSS + the single inline copy script (the only JS on this page, and the
 // only JS explicitly sanctioned outside the homepage + viewer shell).
 const AGENT_PROMPT =
-  "I want to publish an HTML document to justhtml.sh. Read https://justhtml.sh/auth.md and https://justhtml.sh/llms.txt, then get me an API key and publish the doc. When you register I'll get an email with a 6-digit code — check with me and I'll read it back so you can finish. Give me back the shareable URL when done.";
+  instanceContent("I want to publish an HTML document to justhtml.sh. Read https://justhtml.sh/auth.md and https://justhtml.sh/llms.txt, then get me an API key and publish the doc. When you register I'll get an email with a 6-digit code — check with me and I'll read it back so you can finish. Give me back the shareable URL when done.");
 
 const PROMPT_STYLE = `
 <style>

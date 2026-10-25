@@ -1,3 +1,4 @@
+import { LLMS_BODY } from "../lib/skill-content";
 // scripts/spec-check.ts — STATIC, no-server consistency check guarding the API
 // surface. Run via `npm run spec:check` (tsx). Since the Z5 cutover the served
 // OpenAPI spec is CODE-FIRST (generated from the Zod schemas), so this check has
@@ -44,15 +45,6 @@ const HTTP_METHODS = ["GET", "POST", "PUT", "PATCH", "DELETE"] as const;
 type Method = (typeof HTTP_METHODS)[number];
 
 // --- helpers -------------------------------------------------------------
-
-/** Extract a single backtick-delimited `export const NAME = \`...\`` literal. */
-function extractTemplateLiteral(file: string, name: string): string {
-  const src = readFileSync(file, "utf8");
-  const re = new RegExp("export const " + name + " = `([\\s\\S]*?)`;");
-  const m = src.match(re);
-  if (!m) throw new Error(`could not find \`export const ${name}\` in ${file}`);
-  return m[1];
-}
 
 function fmtSet(s: Iterable<string>): string {
   const arr = [...s].sort();
@@ -210,7 +202,7 @@ function pathRegex(path: string): RegExp {
 }
 
 function loadLlmsPaths(): { has: (p: string) => boolean } {
-  const body = extractTemplateLiteral(join(ROOT, "lib/skill-content.ts"), "LLMS_BODY");
+  const body = LLMS_BODY;
   return {
     has: (specPath: string) => {
       // Try the full path, and (for /api/v1 endpoints) the base-relative form.

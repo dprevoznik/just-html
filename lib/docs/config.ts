@@ -13,7 +13,7 @@ export const RL_CREATES_PER_HOUR = 60; // doc creates
 export const RL_WRITES_PER_MIN = 60; // PATCH, /edits, grants, rotate-token
 export const RL_READS_PER_MIN = 300; // GET
 
-export const ORIGIN = "https://justhtml.sh";
+export { ORIGIN } from "@/lib/auth/config";
 
 // Title cap — generous, keeps the metadata column sane. Not in the plan's table
 // (which only caps html/docs/storage), but a title is metadata we render into a

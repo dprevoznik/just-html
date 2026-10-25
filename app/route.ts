@@ -1,3 +1,4 @@
+import { instanceContent } from "@/lib/instance";
 import { htmlResponse } from "@/lib/page";
 
 // Homepage — plain HTML, true man-page style (tail.1 / httpbingo.org vibe),
@@ -136,5 +137,5 @@ framework — the document you publish is the document people see.</pre></div>
 </script>
 </body>
 </html>`;
-  return htmlResponse(html);
+  return htmlResponse(instanceContent(html));
 }

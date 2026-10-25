@@ -1,3 +1,4 @@
+import { instanceContent } from "@/lib/instance";
 // GET /api/spec.yaml — OpenAPI 3.1 covering every v1 endpoint plus the auth.md /
 // OAuth surfaces. Served as a route handler (new Response(text)).
 //
@@ -13,7 +14,7 @@ import { SPEC_YAML } from "@/lib/openapi/generated-spec";
 export const dynamic = "force-dynamic";
 
 export function GET() {
-  return new Response(SPEC_YAML, {
+  return new Response(instanceContent(SPEC_YAML), {
     status: 200,
     headers: {
       "Content-Type": "application/yaml; charset=utf-8",

@@ -14,7 +14,8 @@
     "gen:spec": "tsx scripts/gen-spec.ts",
     "spec:check": "tsx scripts/spec-check.ts",
     "test": "vitest run",
-    "e2e": "node --env-file=.env node_modules/.bin/tsx scripts/e2e.ts"
+    "e2e": "node --env-file=.env node_modules/.bin/tsx scripts/e2e.ts",
+    "build:deploy": "node scripts/migrate.mjs && next build"
   },
   "dependencies": {
     "@asteasolutions/zod-to-openapi": "^8.5.0",

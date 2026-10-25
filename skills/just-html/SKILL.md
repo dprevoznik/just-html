@@ -61,6 +61,15 @@ pointing back at the discovery metadata.
 
 Scopes: docs.read docs.write (every key carries both).
 
+## Video link previews
+
+Set og:video in each document's HTML head to an absolute public HTTPS URL for a
+short direct MP4. Optional og:video:type (video/mp4), og:video:width and
+og:video:height are copied to the viewer shell. Different docs can use different
+videos. Share a public /d/:slug or private /d/:slug?viewtoken=... URL. Bare
+private URLs never disclose metadata; the media URL itself must be public.
+iMessage controls playback and caches previews, so test a fresh link on-device.
+
 ## API (base: https://justhtml.sh/api/v1)
 
 All requests: Authorization: Bearer jh_live_...

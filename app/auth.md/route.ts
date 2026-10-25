@@ -1,3 +1,4 @@
+import { instanceContent } from "@/lib/instance";
 // GET /auth.md — prose registration instructions for agents (§2.3). Served as
 // text/markdown; charset=utf-8. Verbatim from the spec draft.
 export const dynamic = "force-static";
@@ -152,7 +153,7 @@ Full API reference: \`https://justhtml.sh/llms.txt\` and
 `;
 
 export function GET(): Response {
-  return new Response(AUTH_MD, {
+  return new Response(instanceContent(AUTH_MD), {
     headers: {
       "Content-Type": "text/markdown; charset=utf-8",
       "Cache-Control": "public, max-age=300",

@@ -89,3 +89,58 @@ export function documentPreview(doc: Pick<DocRow, "slug" | "title" | "html">): {
     imageDescription: truncate(description, IMAGE_DESCRIPTION_MAX),
   };
 }
+
+/** Lift the first authored OG video from the document into its viewer shell.
+ * Only absolute HTTPS media URLs are useful to an unauthenticated unfurler.
+ * We emit metadata only: the server never fetches the author's URL.
+ */
+export function extractPreviewVideo(html: string): {
+  url: string;
+  secureUrl: string;
+  type?: string;
+  width?: number;
+  height?: number;
+} | null {
+  const source = html
+    .replace(/<!--[\s\S]*?-->/g, "")
+    .replace(/<(script|style|template|noscript)\b[^>]*>[\s\S]*?<\/\1>/gi, "");
+  const head = source.match(/<head\b[^>]*>([\s\S]*?)<\/head\s*>/i)?.[1]
+    ?? source.split(/<body\b/i)[0];
+  const values = new Map<string, string>();
+  let started = false;
+  for (const tag of metaTags(head)) {
+    const attrs = attributes(tag);
+    const key = (attrs.get("property") ?? "").toLowerCase();
+    if (key === "og:video" || key === "og:video:url") {
+      // Structured properties belong to the first video, never a later one.
+      if (started) break;
+      started = true;
+    }
+    if (key.startsWith("og:video") && !values.has(key)) {
+      values.set(key, clean(attrs.get("content") ?? ""));
+    }
+  }
+  function httpsUrl(value?: string): string | null {
+    if (!value) return null;
+    try {
+      const url = new URL(value);
+      return url.protocol === "https:" && !url.username && !url.password ? url.href : null;
+    } catch { return null; }
+  }
+  const url = httpsUrl(values.get("og:video:secure_url"))
+    ?? httpsUrl(values.get("og:video")) ?? httpsUrl(values.get("og:video:url"));
+  if (!url) return null;
+  const type = values.get("og:video:type");
+  function dimension(key: string): number | undefined {
+    const value = values.get(key) ?? "";
+    return /^\d+$/.test(value) && Number(value) > 0 && Number(value) <= 16384
+      ? Number(value) : undefined;
+  }
+  return {
+    url,
+    secureUrl: url,
+    type: type && /^video\/[a-z0-9.+-]+$/i.test(type) ? type : undefined,
+    width: dimension("og:video:width"),
+    height: dimension("og:video:height"),
+  };
+}
